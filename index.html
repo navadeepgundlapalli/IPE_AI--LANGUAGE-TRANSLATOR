@@ -1,0 +1,771 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lingoverse – AI Language Translator</title>
+
+<style>
+:root {
+ --bg:#f7f4ee;
+ --card:#fffdf9;
+ --ink:#1b1930;
+ --mute:#69668a;
+ --line:#e5dfd2;
+ --a:#5b3df5;
+ --b:#ff6b4a;
+}
+
+* {box-sizing:border-box}
+
+body {
+ margin:0;
+ font-family:Segoe UI,Arial,sans-serif;
+ background:var(--bg);
+ color:var(--ink);
+ line-height:1.6;
+}
+
+body.dark {
+ --bg:#110f1d;
+ --card:#1b1930;
+ --ink:#f2effd;
+ --mute:#a09cc0;
+ --line:#2d2a47;
+ --a:#8f7bff;
+ --b:#ff8a6e;
+}
+
+nav {
+ position:sticky;
+ top:0;
+ z-index:10;
+ background:var(--card);
+ border-bottom:1px solid var(--line);
+ padding:15px 5%;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+
+.logo {font-size:22px;font-weight:bold}
+nav a {color:var(--ink);text-decoration:none;margin:8px}
+button {
+ cursor:pointer;
+ border:0;
+ border-radius:10px;
+ padding:11px 18px;
+ font-size:15px;
+}
+
+.btn {
+ background:linear-gradient(90deg,var(--a),var(--b));
+ color:white;
+ font-weight:bold;
+}
+
+.hero {
+ text-align:center;
+ padding:75px 15px;
+ background:
+ radial-gradient(circle at 15% 20%,#a18aff44,transparent 35%),
+ radial-gradient(circle at 85% 20%,#ff8a6e33,transparent 35%);
+}
+
+.hero h1 {
+ font-size:clamp(35px,6vw,65px);
+ line-height:1.1;
+}
+
+.hero h1 span {
+ color:var(--a);
+}
+
+.hero p {
+ color:var(--mute);
+ max-width:650px;
+ margin:20px auto;
+}
+
+.stats {
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:12px;
+ max-width:800px;
+ margin:40px auto 0;
+}
+
+.stat,.panel,.card {
+ background:var(--card);
+ border:1px solid var(--line);
+ border-radius:16px;
+ padding:20px;
+}
+
+.stat b {
+ display:block;
+ color:var(--a);
+ font-size:28px;
+}
+
+.stat span {color:var(--mute)}
+
+section {
+ padding:55px 5%;
+ max-width:1150px;
+ margin:auto;
+}
+
+h2 {font-size:30px;margin-bottom:5px}
+
+.sub {color:var(--mute);margin-bottom:25px}
+
+.panel {
+ padding:22px;
+ box-shadow:0 15px 40px #5b3df51a;
+}
+
+.row {
+ display:flex;
+ align-items:center;
+ gap:10px;
+ flex-wrap:wrap;
+}
+
+select {
+ background:var(--bg);
+ color:var(--ink);
+ border:1px solid var(--line);
+ border-radius:10px;
+ padding:12px;
+ font-size:15px;
+ flex:1;
+ min-width:120px;
+}
+
+.swap {
+ background:var(--a);
+ color:white;
+ border-radius:50%;
+}
+
+.tones {
+ display:flex;
+ gap:8px;
+ flex-wrap:wrap;
+ margin:15px 0;
+}
+
+.chip {
+ background:var(--bg);
+ border:1px solid var(--line);
+ color:var(--ink);
+ border-radius:30px;
+ padding:7px 15px;
+}
+
+.chip.active {
+ background:var(--a);
+ color:white;
+}
+
+.grid {
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:15px;
+}
+
+textarea,.output {
+ width:100%;
+ min-height:180px;
+ padding:15px;
+ background:var(--bg);
+ color:var(--ink);
+ border:1px solid var(--line);
+ border-radius:13px;
+ font-size:16px;
+ font-family:inherit;
+}
+
+.output {
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+}
+
+.bar {
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ flex-wrap:wrap;
+ gap:10px;
+ margin-top:10px;
+}
+
+.small {font-size:13px;color:var(--mute)}
+
+.insights {
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px;
+ margin-top:20px;
+}
+
+.insight {
+ background:var(--bg);
+ padding:15px;
+ border-radius:12px;
+ border:1px solid var(--line);
+}
+
+.insight h3 {
+ color:var(--a);
+ font-size:15px;
+}
+
+.cards {
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+ gap:15px;
+}
+
+.card h3 {margin-top:5px}
+.card p {color:var(--mute)}
+
+.languages {
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+ gap:10px;
+}
+
+.language {
+ background:var(--card);
+ border:1px solid var(--line);
+ padding:14px;
+ border-radius:12px;
+ cursor:pointer;
+ color:var(--ink);
+}
+
+.language:hover {border-color:var(--a)}
+
+.history {
+ margin-top:20px;
+}
+
+.history-item {
+ padding:12px;
+ border-bottom:1px solid var(--line);
+ cursor:pointer;
+}
+
+.history-item:hover {color:var(--a)}
+
+.error {color:var(--b);margin-top:10px}
+
+footer {
+ background:var(--card);
+ border-top:1px solid var(--line);
+ text-align:center;
+ padding:30px;
+ color:var(--mute);
+}
+
+@media(max-width:700px) {
+ .grid {grid-template-columns:1fr}
+ .stats {grid-template-columns:repeat(2,1fr)}
+ .insights {grid-template-columns:1fr}
+ nav a:not(.logo) {font-size:12px;margin:3px}
+ section {padding:35px 15px}
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+ <div class="logo">🌍 Lingoverse</div>
+ <div>
+  <a href="#translate">Translate</a>
+  <a href="#features">Features</a>
+  <a href="#languages">Languages</a>
+  <button onclick="toggleTheme()">🌙</button>
+ </div>
+</nav>
+
+<header class="hero">
+ <h1>Translate with <span>confidence</span>, not guesswork.</h1>
+ <p>
+ Lingoverse gives you translations in 22 languages,
+ with reverse translation, pronunciation and more.
+ </p>
+ <a href="#translate">
+  <button class="btn">Start Translating →</button>
+ </a>
+
+ <div class="stats">
+  <div class="stat"><b>22</b><span>Languages</span></div>
+  <div class="stat"><b>6</b><span>Tone Styles</span></div>
+  <div class="stat"><b>4</b><span>Translation Insights</span></div>
+  <div class="stat"><b>0</b><span>Sign-ups Needed</span></div>
+ </div>
+</header>
+
+<section id="translate">
+ <h2>The Lingoverse Translator</h2>
+ <p class="sub">
+ Type anything, choose a language and translate instantly.
+ </p>
+
+ <div class="panel">
+
+  <div class="row">
+   <select id="from"></select>
+   <button class="swap" onclick="swapLanguages()">⇄</button>
+   <select id="to"></select>
+  </div>
+
+  <div class="tones" id="tones"></div>
+
+  <div class="grid">
+   <div>
+    <textarea id="source" maxlength="2000"
+    placeholder="Type or paste anything here..."></textarea>
+
+    <div class="bar">
+     <span class="small" id="count">0 / 2000</span>
+     <button class="btn" id="translateBtn"
+     onclick="translateText()">Translate →</button>
+    </div>
+   </div>
+
+   <div>
+    <div class="output" id="result">
+     Your translation appears here.
+    </div>
+
+    <div class="bar">
+     <span class="small" id="pronunciation"></span>
+     <div>
+      <button onclick="copyText()">Copy</button>
+      <button onclick="speakText()">🔊 Listen</button>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="error" id="error"></div>
+
+  <div class="insights" id="insights" hidden>
+   <div class="insight">
+    <h3>🔁 Reverse Check</h3>
+    <p id="reverse"></p>
+   </div>
+
+   <div class="insight">
+    <h3>🎚️ Selected Tone</h3>
+    <p id="toneResult"></p>
+   </div>
+
+   <div class="insight">
+    <h3>🔤 Translation Details</h3>
+    <p id="details"></p>
+   </div>
+
+   <div class="insight">
+    <h3>🌍 Language Information</h3>
+    <p id="languageInfo"></p>
+   </div>
+  </div>
+
+  <div class="history" id="history"></div>
+
+ </div>
+</section>
+
+<section id="features">
+ <h2>Everything a good translator needs</h2>
+ <p class="sub">Explore Lingoverse features.</p>
+
+ <div class="cards">
+  <div class="card">
+   <h3>🔁 Reverse Check</h3>
+   <p>Translate the result back to check the meaning.</p>
+  </div>
+
+  <div class="card">
+   <h3>🎚️ Tone Control</h3>
+   <p>Choose Natural, Formal, Casual, Poetic, Playful or Business.</p>
+  </div>
+
+  <div class="card">
+   <h3>🌍 Multiple Languages</h3>
+   <p>Translate between 22 supported languages.</p>
+  </div>
+
+  <div class="card">
+   <h3>🔊 Pronunciation</h3>
+   <p>Listen to your translated text using your device voice.</p>
+  </div>
+
+  <div class="card">
+   <h3>📋 Copy Translation</h3>
+   <p>Copy the translation with one click.</p>
+  </div>
+
+  <div class="card">
+   <h3>🕘 History</h3>
+   <p>View your recent translations on this device.</p>
+  </div>
+ </div>
+</section>
+
+<section id="languages">
+ <h2>22 Languages</h2>
+ <p class="sub">Choose a language to translate.</p>
+ <div class="languages" id="languageList"></div>
+</section>
+
+<section>
+ <h2>How it works</h2>
+ <div class="cards">
+  <div class="card">
+   <h3>1. Write or Paste</h3>
+   <p>Enter your text in the input box.</p>
+  </div>
+  <div class="card">
+   <h3>2. Choose Language</h3>
+   <p>Select your source and target languages.</p>
+  </div>
+  <div class="card">
+   <h3>3. Translate</h3>
+   <p>Click Translate and see your result.</p>
+  </div>
+ </div>
+</section>
+
+<section>
+ <h2>Frequently Asked Questions</h2>
+
+ <div class="card">
+  <h3>Is Lingoverse free?</h3>
+  <p>Yes. This version does not require an account.</p>
+ </div>
+
+ <div class="card">
+  <h3>Does it need internet?</h3>
+  <p>Yes. Translation uses an external translation service.</p>
+ </div>
+
+ <div class="card">
+  <h3>Can I listen to translations?</h3>
+  <p>Yes, if your device supports speech synthesis for that language.</p>
+ </div>
+</section>
+
+<footer>
+ <h2>🌍 Lingoverse</h2>
+ <p>Translation you can understand, not just copy.</p>
+ <p>© 2026 Lingoverse. All rights reserved.</p>
+</footer>
+
+<script>
+
+const LANGS = {
+ "English":"en",
+ "Telugu":"te",
+ "Hindi":"hi",
+ "Tamil":"ta",
+ "Kannada":"kn",
+ "Malayalam":"ml",
+ "Bengali":"bn",
+ "Marathi":"mr",
+ "Urdu":"ur",
+ "Spanish":"es",
+ "French":"fr",
+ "German":"de",
+ "Italian":"it",
+ "Portuguese":"pt",
+ "Japanese":"ja",
+ "Korean":"ko",
+ "Chinese (Simplified)":"zh",
+ "Arabic":"ar",
+ "Russian":"ru",
+ "Turkish":"tr",
+ "Thai":"th",
+ "Indonesian":"id"
+};
+
+const TONES = [
+ "Natural","Formal","Casual",
+ "Poetic","Playful","Business"
+];
+
+let selectedTone = "Natural";
+let lastTranslation = "";
+let busy = false;
+
+const from = document.getElementById("from");
+const to = document.getElementById("to");
+const source = document.getElementById("source");
+const result = document.getElementById("result");
+
+function setup() {
+ from.innerHTML = '<option value="auto">Auto-detect</option>';
+ to.innerHTML = "";
+
+ Object.keys(LANGS).forEach(lang => {
+  from.add(new Option(lang,LANGS[lang]));
+  to.add(new Option(lang,LANGS[lang]));
+ });
+
+ to.value = "te";
+
+ TONES.forEach(tone => {
+  const btn = document.createElement("button");
+  btn.className = "chip" + (tone==="Natural"?" active":"");
+  btn.textContent = tone;
+
+  btn.onclick = () => {
+   selectedTone = tone;
+   document.querySelectorAll(".chip").forEach(x =>
+    x.classList.remove("active")
+   );
+   btn.classList.add("active");
+  };
+
+  document.getElementById("tones").appendChild(btn);
+ });
+
+ Object.keys(LANGS).forEach(lang => {
+  const btn = document.createElement("button");
+  btn.className = "language";
+  btn.textContent = lang;
+
+  btn.onclick = () => {
+   to.value = LANGS[lang];
+   document.getElementById("translate").scrollIntoView();
+  };
+
+  document.getElementById("languageList").appendChild(btn);
+ });
+}
+
+source.addEventListener("input", () => {
+ document.getElementById("count").textContent =
+ source.value.length + " / 2000";
+});
+
+function swapLanguages() {
+ if(from.value === "auto") return;
+
+ const temp = from.value;
+ from.value = to.value;
+ to.value = temp;
+}
+
+async function getTranslation(text, fromLang, toLang) {
+ const url =
+ "https://api.mymemory.translated.net/get?q=" +
+ encodeURIComponent(text) +
+ "&langpair=" +
+ encodeURIComponent(fromLang+"|"+toLang);
+
+ const response = await fetch(url);
+
+ if(!response.ok) {
+  throw new Error("Translation service unavailable.");
+ }
+
+ const data = await response.json();
+
+ if(data.responseStatus !== 200) {
+  throw new Error(data.responseDetails || "Translation failed.");
+ }
+
+ return data.responseData.translatedText;
+}
+
+async function translateText() {
+
+ const text = source.value.trim();
+ const fromLang = from.value;
+ const toLang = to.value;
+
+ if(!text) {
+  result.textContent = "Please enter some text.";
+  return;
+ }
+
+ if(busy) return;
+
+ busy = true;
+
+ const btn = document.getElementById("translateBtn");
+ const error = document.getElementById("error");
+
+ btn.disabled = true;
+ btn.textContent = "Translating...";
+ error.textContent = "";
+ document.getElementById("insights").hidden = true;
+ result.textContent = "Please wait...";
+
+ try {
+
+  const translated = await getTranslation(
+   text,
+   fromLang === "auto" ? "en" : fromLang,
+   toLang
+  );
+
+  lastTranslation = translated;
+  result.textContent = translated;
+
+  let back = "Reverse translation unavailable.";
+
+  try {
+   back = await getTranslation(
+    translated,
+    toLang,
+    fromLang === "auto" ? "en" : fromLang
+   );
+  } catch(e) {}
+
+  document.getElementById("reverse").textContent = back;
+
+  document.getElementById("toneResult").textContent =
+   "Selected tone: " + selectedTone +
+   ". The translation service may not apply tone changes.";
+
+  document.getElementById("details").textContent =
+   "Original text: " + text;
+
+  const targetName = Object.keys(LANGS).find(
+   name => LANGS[name] === toLang
+  );
+
+  document.getElementById("languageInfo").textContent =
+   "Translated into " + targetName + ".";
+
+  document.getElementById("pronunciation").textContent =
+   "Translation ready";
+
+  document.getElementById("insights").hidden = false;
+
+  saveHistory({
+   source:text,
+   translation:translated,
+   language:targetName
+  });
+
+ } catch(e) {
+
+  result.textContent = "Translation could not be completed.";
+  error.textContent =
+   e.message + " Please check your internet connection and try again.";
+
+ } finally {
+
+  busy = false;
+  btn.disabled = false;
+  btn.textContent = "Translate →";
+ }
+}
+
+function copyText() {
+ if(!lastTranslation) return;
+
+ if(navigator.clipboard && window.isSecureContext) {
+  navigator.clipboard.writeText(lastTranslation)
+   .then(() => alert("Translation copied!"))
+   .catch(() => alert("Unable to copy. Please select the text."));
+ } else {
+  alert("Please select and copy the translation.");
+ }
+}
+
+function speakText() {
+
+ if(!lastTranslation) return;
+
+ if(!window.speechSynthesis) {
+  alert("Speech is not supported on this device.");
+  return;
+ }
+
+ const speech = new SpeechSynthesisUtterance(lastTranslation);
+ speech.lang = to.value;
+
+ speechSynthesis.cancel();
+ speechSynthesis.speak(speech);
+}
+
+function toggleTheme() {
+ document.body.classList.toggle("dark");
+}
+
+function saveHistory(item) {
+
+ let history = [];
+
+ try {
+  history = JSON.parse(localStorage.getItem("lingoverse_history") || "[]");
+ } catch(e) {}
+
+ history.unshift(item);
+
+ history = history.slice(0,6);
+
+ try {
+  localStorage.setItem(
+   "lingoverse_history",
+   JSON.stringify(history)
+  );
+ } catch(e) {}
+
+ showHistory();
+}
+
+function showHistory() {
+
+ let history = [];
+
+ try {
+  history = JSON.parse(localStorage.getItem("lingoverse_history") || "[]");
+ } catch(e) {}
+
+ const box = document.getElementById("history");
+ box.innerHTML = "";
+
+ if(!history.length) return;
+
+ const title = document.createElement("h3");
+ title.textContent = "🕘 Recent Translations";
+ box.appendChild(title);
+
+ history.forEach(item => {
+
+  const div = document.createElement("div");
+  div.className = "history-item";
+
+  div.textContent =
+   item.source.slice(0,35) + " → " +
+   item.translation.slice(0,35);
+
+  div.onclick = () => {
+   source.value = item.source;
+   lastTranslation = item.translation;
+   result.textContent = item.translation;
+   to.value = LANGS[item.language] || "te";
+  };
+
+  box.appendChild(div);
+ });
+}
+
+setup();
+showHistory();
+
+</script>
+</body>
+</html>
